@@ -45,3 +45,20 @@ def fetch_document_types(db_path):
     finally:
         if conn:
             conn.close()
+
+
+def run():
+    db_path = input("Enter the path to your SQLite database: ")
+    results = fetch_document_types(db_path)
+
+    if 'error' in results:
+        print(f"An error occurred: {results['error']}")
+    else:
+        print(f"Number of records with null Document Type: {results['null_count']}")
+        print("\nDocument Types and their counts:")
+        for item in results['document_type_frequencies']:
+            print(f"{item['document_type']}: {item['count']}")
+
+
+if __name__ == "__main__":
+    run()
