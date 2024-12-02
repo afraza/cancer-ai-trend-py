@@ -207,8 +207,6 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-# Database file: ignore the database file because it is large
-*.db
 
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
@@ -248,3 +246,14 @@ out/
 *.iml
 *.ipr
 *.iws
+
+# Ignore database (*.db) and pickle (*.pkl) files
+# Rationale:
+# Large file sizes can bloat the repository
+#    - Database files are often sizeable
+#    - Pickle files often contain large serialized Python objects
+*.db
+*.pkl
+# Ignore IDE-specific files
+.idea/
+*.iml
