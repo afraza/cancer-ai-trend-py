@@ -255,5 +255,4 @@ out/
 *.db
 *.pkl
 # Ignore IDE-specific files
-.idea/
 *.iml
