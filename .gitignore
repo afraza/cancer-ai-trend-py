@@ -207,5 +207,13 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-# Database file: ignore the database file because it is large
+# Ignore database (*.db) and pickle (*.pkl) files
+# Rationale:
+# Large file sizes can bloat the repository
+#    - Database files are often sizeable
+#    - Pickle files often contain large serialized Python objects
 *.db
+*.pkl
+# Ignore IDE-specific files
+.idea/
+*.iml
