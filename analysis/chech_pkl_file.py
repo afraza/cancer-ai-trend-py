@@ -35,5 +35,9 @@ def load_and_show_records():
         print(f"Error loading file: {e}")
 
 
-if __name__ == "__main__":
+def run():
     load_and_show_records()
+
+
+if __name__ == "__main__":
+    run()
