@@ -20,17 +20,35 @@ def load_and_show_records():
         with open(file_path, 'rb') as f:
             data = pickle.load(f)
 
-            print("\nFew records from the PKL file:")
-            if isinstance(data, list) or isinstance(data, tuple):
-                for record in data[:5]:  # Show first 5 records if it's a list/tuple
+            print("\nLoaded Data Type:", type(data))
+
+            # Display content based on data type
+            if isinstance(data, (list, tuple)):
+                print("Showing first 5 records:")
+                for record in data[:5]:
                     print(record)
+                print(f"Total records: {len(data)}")
             elif isinstance(data, dict):
+                print("Showing first 5 key-value pairs:")
                 for i, (key, value) in enumerate(data.items()):
                     print(f"{key}: {value}")
-                    if i == 4:  # Show first 5 items in a dictionary
+                    if i == 4:
                         break
+                print(f"Total keys: {len(data)}")
+            elif hasattr(data, "head"):  # For Pandas DataFrame
+                print("Detected Pandas DataFrame, showing first 5 rows:")
+                print(data.head())
+                print("\nDataFrame Info:")
+                print(data.info())
+                print("\nColumn Names:", data.columns.tolist())
+                print(f"Total Records: {len(data)}")
+            elif hasattr(data, "shape"):  # For NumPy arrays
+                print("Detected NumPy array, showing first 5 elements:")
+                print(data[:5])
+                print(f"Array Shape: {data.shape}")
             else:
-                print("Unsupported data format. Unable to display records.")
+                print("Data loaded but format is unknown. Here is its representation:")
+                print(repr(data))
     except Exception as e:
         print(f"Error loading file: {e}")
 
