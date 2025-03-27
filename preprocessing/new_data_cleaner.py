@@ -3,7 +3,6 @@ import pandas as pd
 import spacy
 from tqdm import tqdm
 
-
 def fetch_data_from_db(db_path):
     try:
         conn = sqlite3.connect(db_path)
@@ -44,13 +43,24 @@ def save_processed_data_to_db(df, db_path):
         conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
-        # Add columns if missing
-        cursor.executescript("""
-            ALTER TABLE full_references ADD COLUMN IF NOT EXISTS clean_title TEXT;
-            ALTER TABLE full_references ADD COLUMN IF NOT EXISTS clean_abstract TEXT;
-            ALTER TABLE full_references ADD COLUMN IF NOT EXISTS clean_author_keywords TEXT;
-            ALTER TABLE full_references ADD COLUMN IF NOT EXISTS clean_index_keywords TEXT;
-        """)
+        # Check if columns exist and add them if necessary
+        columns_to_check = ['clean_title', 'clean_abstract', 'clean_author_keywords', 'clean_index_keywords']
+        for col in columns_to_check:
+            cursor.execute(f"""
+                SELECT name 
+                FROM sqlite_master 
+                WHERE type='table' AND name='full_references';
+            """)
+            table_info = cursor.fetchone()
+            cursor.execute(f"""
+                PRAGMA table_info(full_references);
+            """)
+            existing_columns = [row[1] for row in cursor.fetchall()]
+            if col not in existing_columns:
+                cursor.execute(f"""
+                    ALTER TABLE full_references ADD COLUMN {col} TEXT;
+                """)
+                print(f"Added column: {col}")
 
         # Prepare batch data using EID as key
         batch_data = [
@@ -77,9 +87,10 @@ def save_processed_data_to_db(df, db_path):
 
     except sqlite3.Error as e:
         print(f"Update error: {e}")
-        conn.rollback()
+        if 'conn' in locals():
+            conn.rollback()
     finally:
-        if conn:
+        if 'conn' in locals():
             conn.close()
 
 
