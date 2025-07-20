@@ -1,5 +1,5 @@
 import sqlite3
-
+import os
 def fetch_document_types(db_path):
     try:
         # Connect to the SQLite database
@@ -49,6 +49,7 @@ def fetch_document_types(db_path):
 
 def run():
     db_path = input("Enter the path to your SQLite database: ")
+    os.environ["DB_NAME"] = db_path
     results = fetch_document_types(db_path)
 
     if 'error' in results:
