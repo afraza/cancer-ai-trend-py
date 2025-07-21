@@ -256,3 +256,4 @@ out/
 *.pkl
 # Ignore IDE-specific files
 *.iml
+.DS_Store
