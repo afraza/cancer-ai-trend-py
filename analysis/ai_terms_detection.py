@@ -4,8 +4,8 @@ import sqlite3
  # to find the number of articles
 conn = sqlite3.connect(DB_NAME)
 cursor = conn.cursor()
-table_name = 'your_table'
-cursor.execute(f"SELECT COUNT(*) FROM full_references")
+table_name = 'full_references'
+cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
 number_of_articles = cursor.fetchone()[0]  # The count is in the first element of the tuple
 cursor.close()
 conn.close()
@@ -278,5 +278,5 @@ ai_ml_techniques = [
 ]
 
 ai_ml_techniques = [technique.lower() for technique in ai_ml_techniques]  # convert to lower case
-number_of_ai_terms=len(ai_ml_techniques)
+number_of_ai_terms=len(ai_ml_techniques) # number of AL and ML terms in the array of ai_ml_techniques
 article_ai_terms_occurrence = dok_matrix((number_of_articles, number_of_ai_terms))
