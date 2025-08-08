@@ -1,9 +1,10 @@
 import sqlite3
-import os
-def fetch_document_types(db_path):
+from config import db_name
+
+def fetch_document_types(db_name):
     try:
         # Connect to the SQLite database
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(db_name)
         cursor = conn.cursor()
 
         # SQL query to find null Document Types and count all Document Types
@@ -48,9 +49,8 @@ def fetch_document_types(db_path):
 
 
 def run():
-    db_path = input("Enter the path to your SQLite database: ")
-    os.environ["DB_NAME"] = db_path
-    results = fetch_document_types(db_path)
+
+    results = fetch_document_types(db_name)
 
     if 'error' in results:
         print(f"An error occurred: {results['error']}")

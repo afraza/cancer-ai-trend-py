@@ -26,6 +26,7 @@ def run_function(directory, function_name):
 
 # Main function to display available scripts and allow user to select and run them
 def main():
+
     preprocessing_functions = list_functions('preprocessing')
     analysis_functions = list_functions('analysis')
 

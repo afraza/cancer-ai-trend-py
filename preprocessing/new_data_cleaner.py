@@ -2,10 +2,12 @@ import sqlite3
 import pandas as pd
 import spacy
 from tqdm import tqdm
+from config import db_name
 
-def fetch_data_from_db(db_path):
+
+def fetch_data_from_db(db_name):
     try:
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(db_name)
         query = """
         SELECT EID, Title, Abstract, "Author Keywords", "Index Keywords"
         FROM full_references;
@@ -38,9 +40,9 @@ def clean_and_normalize_text(df):
     return df
 
 
-def save_processed_data_to_db(df, db_path):
+def save_processed_data_to_db(df, db_name):
     try:
-        conn = sqlite3.connect(db_path)
+        conn = sqlite3.connect(db_name)
         cursor = conn.cursor()
 
         # Check if columns exist and add them if necessary
@@ -95,14 +97,13 @@ def save_processed_data_to_db(df, db_path):
 
 
 def run():
-    db_path = input("Enter database path: ")
 
     print("Fetching data...")
-    df = fetch_data_from_db(db_path)
+    df = fetch_data_from_db(db_name)
 
     if df is not None:
         df = clean_and_normalize_text(df)
-        save_processed_data_to_db(df, db_path)
+        save_processed_data_to_db(df, db_name)
 
 
 if __name__ == "__main__":

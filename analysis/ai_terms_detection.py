@@ -5,12 +5,14 @@ import spacy
 from spacy.matcher import PhraseMatcher
 from rapidfuzz import fuzz
 from scipy.sparse import save_npz, load_npz
+from config import db_name
+
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
 
  # to find the number of articles
-conn = sqlite3.connect(DB_NAME)
+conn = sqlite3.connect(db_name)
 cursor = conn.cursor()
 table_name = 'full_references'
 cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
@@ -290,7 +292,7 @@ ai_term_to_index = {term: idx for idx, term in enumerate(ai_ml_techniques)}
 number_of_ai_terms=len(ai_ml_techniques) # number of AL and ML terms in the array of ai_ml_techniques
 ''' creating a sparse matrix to store AI terms occurrences in the articles '''
 article_ai_terms_occurrence = dok_matrix((number_of_articles, number_of_ai_terms))
-conn = sqlite3.connect(DB_NAME)
+conn = sqlite3.connect(db_name)
 cursor = conn.cursor()
 table_name = 'full_references'
 
@@ -339,7 +341,7 @@ while True:
                     term_index = ai_term_to_index[ai_term]
                     article_ai_terms_occurrence[row_index, term_index] = 1
                     seen_terms.add(ai_term)
-                    break  # Stop after first good fuzzy match
+                    break  # Stop after the first good fuzzy match
 
 cursor.close()
 conn.close()
