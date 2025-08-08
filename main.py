@@ -29,6 +29,7 @@ def main():
 
     preprocessing_functions = list_functions('preprocessing')
     analysis_functions = list_functions('analysis')
+    visualize_functions = list_functions('visualize')
 
     print("Available functions:")
     print("Preprocessing:")
@@ -39,10 +40,14 @@ def main():
     for i, func in enumerate(analysis_functions, 1):
         print(f"A{i}. {func}")
 
+    print("\nVisualize:")
+    for i, func in enumerate(visualize_functions, 1):
+        print(f"V{i}. {func}")
+
     while True:
         # Prompt user for input
         choice = input(
-            "\nEnter the number of the function you want to run (prefix P for preprocessing, A for analysis, or 'q' to quit): ")
+            "\nEnter the number of the function you want to run (prefix P for preprocessing, A for analysis, V for visualize, or 'q' to quit): ")
         if choice.lower() == 'q':
             break
 
@@ -70,8 +75,20 @@ def main():
                     print("Invalid choice. Please enter a valid number.")
             except ValueError:
                 print("Invalid input. Please enter a valid number.")
+        # Handle visualize function selection
+        elif choice.startswith('V'):
+            try:
+                index = int(choice[1:]) - 1
+                if 0 <= index < len(visualize_functions):
+                    selected_function = visualize_functions[index]
+                    print(f"\nRunning {selected_function} from visualize...")
+                    run_function('visualize', selected_function)
+                else:
+                    print("Invalid choice. Please enter a valid number.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
         else:
-            print("Invalid input format. Use 'P' for preprocessing and 'A' for analysis.")
+            print("Invalid input format. Use 'P' for preprocessing and 'A' for analysis, or 'V' for visualize.")
 
 
 if __name__ == "__main__":
