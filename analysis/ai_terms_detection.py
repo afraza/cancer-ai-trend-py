@@ -23,6 +23,27 @@ def run():
     conn.close()
 
     raw_ai_ml_techniques = [
+        # General Terms
+        'machine learning',
+        'artificial intelligence',
+        'deep learning',
+        'neural network',
+        'supervised learning',
+        'unsupervised learning',
+        'reinforcement learning',
+        'natural language processing',
+        'computer vision',
+        'feature engineering',
+        'overfitting',
+        'underfitting',
+        'gradient descent',
+        'convolutional neural network',
+        'recurrent neural network',
+        'generative adversarial network',
+        'transfer learning',
+        'hyperparameter tuning',
+        'data preprocessing',
+        'model evaluation',
         # Supervised Learning Techniques
         "Linear Regression",
         "Logistic Regression",

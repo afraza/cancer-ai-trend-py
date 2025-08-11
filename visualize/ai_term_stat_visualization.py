@@ -7,7 +7,31 @@ import sqlite3
 from config import db_name
 from uuid import uuid4
 
+# Define unique_id at module level for use in all functions
+unique_id = uuid4().hex[:8]  # Generate a short unique ID
+
 ai_ml_techniques = [
+        # General Terms
+        'machine learning',
+        'artificial intelligence',
+        'deep learning',
+        'neural network',
+        'supervised learning',
+        'unsupervised learning',
+        'reinforcement learning',
+        'natural language processing',
+        'computer vision',
+        'feature engineering',
+        'overfitting',
+        'underfitting',
+        'gradient descent',
+        'convolutional neural network',
+        'recurrent neural network',
+        'generative adversarial network',
+        'transfer learning',
+        'hyperparameter tuning',
+        'data preprocessing',
+        'model evaluation',
         # Supervised Learning Techniques
         "Linear Regression",
         "Logistic Regression",
@@ -278,13 +302,14 @@ ai_ml_techniques = [
 def load_data():
     # Load the sparse matrix
     matrix = load_npz("article_ai_terms_occurrence.npz")
-
-    # Connect to the database to get publication years
+    # Connect to database to get publication years
     conn = sqlite3.connect(db_name)
     query = "SELECT row_index, Year FROM full_references"
     df_years = pd.read_sql_query(query, conn)
     conn.close()
-
+    # Validate matrix and ai_ml_techniques alignment
+    if matrix.shape[1] != len(ai_ml_techniques):
+        raise ValueError(f"Matrix has {matrix.shape[1]} columns, but ai_ml_techniques has {len(ai_ml_techniques)} terms")
     return matrix, df_years
 
 
@@ -292,7 +317,6 @@ def calculate_document_frequency(matrix):
     # Document frequency: number of articles each term appears in
     df = np.array(matrix.getnnz(axis=0)).flatten()
     return pd.DataFrame({'Term': ai_ml_techniques, 'Document_Frequency': df})
-
 
 def top_n_terms(df, n=10):
     # Get top N terms by document frequency
@@ -332,7 +356,7 @@ def plot_document_frequency(df, output_dir):
     plt.title('Top 10 AI/ML Terms by Document Frequency')
     plt.xlabel('Number of Articles')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/top_terms_df.png')
+    plt.savefig(f'{output_dir}/top_terms_df_{unique_id}.png')
     plt.close()
 
 
@@ -346,7 +370,7 @@ def plot_cooccurrence_matrix(cooc_matrix, matrix, output_dir):  # Add matrix as 
     sns.heatmap(cooc_df, cmap='YlOrRd', annot=False)
     plt.title('Term Co-occurrence Matrix (Top 20 Terms)')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/term_cooccurrence.png')
+    plt.savefig(f'{output_dir}/term_cooccurrence_{unique_id}.png')
     plt.close()
 
 
@@ -357,7 +381,7 @@ def plot_term_count_distribution(term_counts, output_dir):
     plt.xlabel('Number of Terms')
     plt.ylabel('Number of Articles')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/term_count_distribution.png')
+    plt.savefig(f'{output_dir}/term_count_distribution_{unique_id}.png')
     plt.close()
 
     # Print statistics
@@ -374,7 +398,7 @@ def plot_temporal_trends(yearly_counts, yearly_total, output_dir):
     plt.ylabel('Number of Articles')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/temporal_trends_top_terms.png')
+    plt.savefig(f'{output_dir}/temporal_trends_top_terms_{unique_id}.png')
     plt.close()
 
     plt.figure(figsize=(10, 6))
@@ -383,7 +407,7 @@ def plot_temporal_trends(yearly_counts, yearly_total, output_dir):
     plt.xlabel('Year')
     plt.ylabel('Total Term Mentions')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/temporal_trends_total.png')
+    plt.savefig(f'{output_dir}/temporal_trends_total_{unique_id}.png')
     plt.close()
 
 
