@@ -12,7 +12,7 @@ def load_and_show_records():
 
     # Check if file exists
     if not os.path.exists(file_path):
-        print("File not found! Please check the filename and try again.")
+        print("File not found! Please check the filename and try again. ")
         return
 
     # Load and display records
