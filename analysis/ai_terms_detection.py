@@ -16,7 +16,7 @@ def run():
     # to find the number of articles
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
-    table_name = 'full_references'
+    table_name = 'keywords'
     cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
     number_of_articles = cursor.fetchone()[0]  # The count is in the first element of the tuple
     cursor.close()
@@ -317,7 +317,7 @@ def run():
     article_ai_terms_occurrence = dok_matrix((number_of_articles, number_of_ai_terms))
     conn = sqlite3.connect(db_name)
     cursor = conn.cursor()
-    table_name = 'full_references'
+    table_name = 'keywords'
 
     query = f"""
     SELECT 
