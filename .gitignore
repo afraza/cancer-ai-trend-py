@@ -257,6 +257,7 @@ out/
 # Ignore IDE-specific files
 *.iml
 .DS_Store
-
+# ignore text files
+*.txt
 
 
