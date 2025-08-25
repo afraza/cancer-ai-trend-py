@@ -3,7 +3,7 @@ import os
 # Input and output
 INPUT_FILE = "combined_text_total.txt"
 OUTPUT_DIR = "chunks"
-CHUNK_SIZE = 10 * 1024 * 1024  # 10 MB per chunk
+CHUNK_SIZE = 3 * 1024 * 1024  # 10 MB per chunk
 
 
 def split_file(file_path, out_dir, max_chunk_size):
