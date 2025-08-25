@@ -1,3 +1,13 @@
+# Using below prompt, I asked ChatGPT (plus) and Grok (SuperGrok) to get the below ai_term list
+# I have split a 300MB text file into ~100 chunks (each chunk is plain text).
+# The text is scientific papers about AI in cancer research. Your task is:
+# 1. Read each chunk I upload.
+# 2. Extract **all Artificial Intelligence–related terms** from the text.
+#   - Include (but not limited to) techniques, methods, algorithms, tools, models, neural network architectures, NLP terms, computer vision terms, reinforcement learning terms, and related AI concepts.
+#   - Capture synonyms, abbreviations, and variations (e.g., "SVM" and "support vector machine", "CNN" and "convolutional neural network") and save all the synonyms as separate item on a python list for each chunk.
+# 3. Deduplicate them within each chunk.
+# 4. After I upload all 100 chunks, merge and deduplicate the terms across all chunks into one **final comprehensive list**
+
 ai_terms = [
     "Artificial Intelligence (AI)",
     "Explainable Artificial Intelligence (XAI / Explainable AI)",
