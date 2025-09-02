@@ -22,6 +22,8 @@ var/
 wheels/
 share/python-wheels/
 chunks/
+__pycache__/
+visualizations_output/
 *.egg-info/
 .installed.cfg
 *.egg

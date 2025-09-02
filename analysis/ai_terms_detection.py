@@ -9,7 +9,6 @@ from config import db_name
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-
 from ai_terms import ai_terms
 
 def run():
