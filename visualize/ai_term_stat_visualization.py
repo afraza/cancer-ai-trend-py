@@ -1,8 +1,13 @@
 import sys
 import os
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 from scipy.sparse import load_npz
+import sqlite3
+from config import db_name
+from uuid import uuid4
 
 # Set up the path to import ai_terms
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
