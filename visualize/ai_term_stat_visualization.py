@@ -1,3 +1,5 @@
+import sys
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,309 +9,23 @@ import sqlite3
 from config import db_name
 from uuid import uuid4
 
-# Define unique_id at module level for use in all functions
-unique_id = uuid4().hex[:8]  # Generate a short unique ID
+# Set up the path to import ai_terms
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-ai_ml_techniques = [
-        # General Terms
-        'machine learning',
-        'artificial intelligence',
-        'deep learning',
-        'neural network',
-        'supervised learning',
-        'unsupervised learning',
-        'reinforcement learning',
-        'natural language processing',
-        'computer vision',
-        'feature engineering',
-        'overfitting',
-        'underfitting',
-        'gradient descent',
-        'convolutional neural network',
-        'recurrent neural network',
-        'generative adversarial network',
-        'transfer learning',
-        'hyperparameter tuning',
-        'data preprocessing',
-        'model evaluation',
-        # Supervised Learning Techniques
-        "Linear Regression",
-        "Logistic Regression",
-        "Support Vector Machines (SVM)",
-        "Decision Trees",
-        "Random Forests",
-        "Gradient Boosting Machines",
-        "Extreme Gradient Boosting",
-        "XGBoost",
-        "Light Gradient Boosting Machine",
-        "LightGBM",
-        "Naive Bayes",
-        "K-Nearest Neighbors",
-        "KNN",
-        "Ridge Regression",
-        "Lasso Regression",
-        "Elastic Net Regression",
-        "Polynomial Regression",
-        "Perceptron",
-        "Multi-Layer Perceptron",
-        "MLP",
-        "Stochastic Gradient Descent",
-        "SGD Classifier",
-        "SGD Regressor",
-        "AdaBoost",
-        "XGBoost",
-        "Light Gradient Boosting Machine",
-        "CatBoost",
-        "Gaussian Processes",
-        "Bayesian Linear Regression",
-        "Ordinal Regression",
-        "Poisson Regression",
-        "Negative Binomial Regression",
-
-        # Unsupervised Learning Techniques
-        "K-Means",
-        "Hierarchical Clustering",
-        "Density-Based Spatial Clustering of Applications with Noise",
-        "DBSCAN",
-        "Mean Shift Clustering",
-        "Gaussian Mixture Models",
-        "GMM",
-        "Principal Component Analysis",
-        "Independent Component Analysis",
-        "t-Distributed Stochastic Neighbor Embedding",
-        "t-SNE",
-        "Uniform Manifold Approximation and Projection",
-        "UMAP"
-        "Autoencoders",
-        "Variational Autoencoders",
-        "Self-Organizing Maps",
-        "Spectral Clustering",
-        "Affinity Propagation",
-        "Birch Clustering",
-        "Non-Negative Matrix Factorization",
-        "Latent Dirichlet Allocation",
-
-        # Reinforcement Learning Techniques
-        "Q-Learning",
-        "Deep Q-Networks",
-        "Double Q-Learning",
-        "State-Action-Reward-State-Action",
-        "SARSA",
-        "Policy Gradient Methods",
-        "Actor-Critic Methods",
-        "Deep Deterministic Policy Gradient",
-        "Proximal Policy Optimization",
-        "Trust Region Policy Optimization",
-        "Soft Actor-Critic",
-        "Monte Carlo Tree Search",
-        "Temporal Difference (TD) Learning",
-        "Temporal Difference",
-        "REINFORCE Algorithm",
-
-        # Deep Learning Techniques
-        "Convolutional Neural Networks",
-        "CNN",
-        "Recurrent Neural Networks",
-        "RNN"
-        "Long Short-Term Memory",
-        "LSTM",
-        "Gated Recurrent Unit",
-        "Gated Recurrent Unit",
-        "Bidirectional RNN",
-        "Transformers",
-        "Attention Mechanisms",
-        "Self-Attention",
-        "Multi-Head Attention",
-        "Generative Adversarial Networks",
-        "GAN",
-        "Conditional GANs",
-        "CycleGAN",
-        "StyleGAN",
-        "Deep Convolutional GANs",
-        "DCGAN",
-        "Diffusion Models",
-        "Graph Neural Networks",
-        "GNN",
-        "Graph Convolutional Networks",
-        "GCN",
-        "Graph Attention Networks",
-        "GAT",
-        "Residual Networks",
-        "ResNet",
-        "DenseNet",
-        "Inception Networks",
-        "GoogLeNet",
-        "EfficientNet",
-        "Vision Transformers",
-        "Bidirectional Encoder Representations from Transformers",
-        "BERT",
-        "Generative Pre-trained Transformer",
-        "GPT",
-        "Text-to-Text Transfer Transformer",
-        "RoBERTa",
-        "DistilBERT",
-        "ALBERT",
-        "XLNet",
-        "Encoder-Decoder Architectures",
-        "Sequence-to-Sequence Models",
-        "Spiking Neural Networks",
-        "Capsule Networks",
-        "Echo State Networks",
-        "Liquid State Machines",
-
-        # Ensemble Methods
-        "Bootstrap Aggregating",
-        "Bagging",
-        "Boosting",
-        "Stacked Generalization",
-        "Stacking",
-        "Voting Regressors",
-        "Voting Classifiers",
-        "Random Subspace Method",
-
-        # Feature Engineering and Selection Techniques
-        "Feature Scaling",
-        "One-Hot Encoding",
-        "Label Encoding",
-        "Target Encoding",
-        "Feature Selection",
-        "Recursive Feature Elimination",
-        "L1 Regularization",
-        "Principal Component Regression",
-        "Partial Least Squares",
-
-        # Dimensionality Reduction Techniques
-        "Linear Discriminant Analysis",
-        "Canonical Correlation Analysis",
-        "Factor Analysis",
-        "Multidimensional Scaling",
-        "Isomap",
-        "Locally Linear Embedding",
-
-        # Optimization Techniques
-        "Gradient Descent",
-        "Stochastic Gradient Descent",
-        "Mini-Batch Gradient Descent",
-        "Adam Optimizer",
-        "RMSprop",
-        "Adagrad",
-        "Adadelta",
-        "Nadam",
-        "AMSGrad",
-        "L-BFGS",
-        "Conjugate Gradient",
-        "Newton's Method",
-
-        # Probabilistic and Bayesian Methods
-        "Bayesian Neural Networks",
-        "Markov Chain",
-        "Markov Chain Monte Carlo",
-        "Variational Inference",
-        "Hidden Markov Models",
-        "Conditional Random Fields",
-        "Bayesian Belief Networks",
-        "Dirichlet Process Mixture Models",
-
-        # Other Specialized AI Techniques
-        "Swarm Intelligence",
-        "Ant Colony Optimization",
-        "Swarm Optimization",
-        "Genetic Algorithms",
-        "Genetic Programming",
-        "Evolutionary Strategies",
-        "Neuroevolution",
-        "Fuzzy Logic",
-        "Expert Systems",
-        "Case-Based Reasoning",
-        "Symbolic AI",
-        "Knowledge Graphs",
-        "Ontology-Based Reasoning",
-        "Transfer Learning",
-        "Federated Learning",
-        "Meta-Learning",
-        "Few-Shot Learning",
-        "One-Shot Learning",
-        "Zero-Shot Learning",
-        "Active Learning",
-        "Curriculum Learning",
-        "Self-Supervised Learning",
-        "Contrastive Learning",
-        "Adversarial Training",
-        "Domain Adaptation",
-        "Multi-Task Learning",
-        "Online Learning",
-        "Batch Learning",
-        "Incremental Learning",
-        "Lifelong Learning",
-        "Explainable AI",
-        "Anomaly Detection",
-        "Outlier Detection",
-        "Time Series Forecasting",
-        "Reservoir Computing",
-
-        # Natural Language Processing (NLP) Specific Techniques
-        "Word Embeddings",
-        "Bag of Words",
-        "Term Frequency-Inverse Document Frequency",
-        "TF-IDF",
-        "N-Gram",
-        "Latent Semantic Analysis",
-        "Named Entity Recognition",
-        "Part-of-Speech Tagging",
-        "Dependency Parsing",
-        "Sentiment Analysis",
-        "Topic Modeling",
-        "Machine Translation",
-        "Question Answering Systems",
-        "Dialogue Systems",
-        "Coreference Resolution",
-
-        # Computer Vision Specific Techniques
-        "Image Segmentation",
-        "Instance Segmentation",
-        "Semantic Segmentation",
-        "Object Detection",
-        "R-CNN",
-        "Image Classification",
-        "Facial Recognition",
-        "Optical Character Recognition (OCR)",
-        "Image Captioning",
-        "Pose Estimation",
-        "Depth Estimation",
-        "Style Transfer",
-        "Super-Resolution",
-
-        # Other Emerging Techniques
-        "Neurosymbolic AI",
-        "Quantum Machine Learning",
-        "Causal Inference",
-        "Gaussian Process Regression",
-        "Mixture of Experts",
-        "Sparse Neural Networks",
-        "Energy-Based Models",
-        "Normalizing Flows",
-        "Neural Ordinary Differential Equations",
-        "Neural ODE",
-        "Graph Isomorphism Networks",
-        "Temporal Convolutional Networks",
-        "Capsule Neural Networks",
-        "Hypernetworks",
-        "Neural Architecture Search",
-        "Automated Machine Learning"
-    ]
-
+# Import ai_terms
+from ai_terms import ai_terms
+ai_ml_techniques = ai_terms
 
 def load_data():
     # Load the sparse matrix
     matrix = load_npz("article_ai_terms_occurrence.npz")
-    # Connect to database to get publication years
+
+    # Connect to the database to get publication years
     conn = sqlite3.connect(db_name)
     query = "SELECT row_index, Year FROM full_references"
     df_years = pd.read_sql_query(query, conn)
     conn.close()
-    # Validate matrix and ai_ml_techniques alignment
-    if matrix.shape[1] != len(ai_ml_techniques):
-        raise ValueError(f"Matrix has {matrix.shape[1]} columns, but ai_ml_techniques has {len(ai_ml_techniques)} terms")
+
     return matrix, df_years
 
 
@@ -317,6 +33,7 @@ def calculate_document_frequency(matrix):
     # Document frequency: number of articles each term appears in
     df = np.array(matrix.getnnz(axis=0)).flatten()
     return pd.DataFrame({'Term': ai_ml_techniques, 'Document_Frequency': df})
+
 
 def top_n_terms(df, n=10):
     # Get top N terms by document frequency
@@ -356,7 +73,7 @@ def plot_document_frequency(df, output_dir):
     plt.title('Top 10 AI/ML Terms by Document Frequency')
     plt.xlabel('Number of Articles')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/top_terms_df_{unique_id}.png')
+    plt.savefig(f'{output_dir}/top_terms_df.png')
     plt.close()
 
 
@@ -370,7 +87,7 @@ def plot_cooccurrence_matrix(cooc_matrix, matrix, output_dir):  # Add matrix as 
     sns.heatmap(cooc_df, cmap='YlOrRd', annot=False)
     plt.title('Term Co-occurrence Matrix (Top 20 Terms)')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/term_cooccurrence_{unique_id}.png')
+    plt.savefig(f'{output_dir}/term_cooccurrence.png')
     plt.close()
 
 
@@ -381,7 +98,7 @@ def plot_term_count_distribution(term_counts, output_dir):
     plt.xlabel('Number of Terms')
     plt.ylabel('Number of Articles')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/term_count_distribution_{unique_id}.png')
+    plt.savefig(f'{output_dir}/term_count_distribution.png')
     plt.close()
 
     # Print statistics
@@ -398,7 +115,7 @@ def plot_temporal_trends(yearly_counts, yearly_total, output_dir):
     plt.ylabel('Number of Articles')
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/temporal_trends_top_terms_{unique_id}.png')
+    plt.savefig(f'{output_dir}/temporal_trends_top_terms.png')
     plt.close()
 
     plt.figure(figsize=(10, 6))
@@ -407,7 +124,7 @@ def plot_temporal_trends(yearly_counts, yearly_total, output_dir):
     plt.xlabel('Year')
     plt.ylabel('Total Term Mentions')
     plt.tight_layout()
-    plt.savefig(f'{output_dir}/temporal_trends_total_{unique_id}.png')
+    plt.savefig(f'{output_dir}/temporal_trends_total.png')
     plt.close()
 
 
